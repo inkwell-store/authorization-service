@@ -29,7 +29,7 @@ public class CredentialRole {
 
     @ManyToOne
     @JoinColumn(name = "credential_id")
-    private Crendential credential;
+    private Credential credential;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
