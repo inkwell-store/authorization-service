@@ -2,13 +2,13 @@
 
 This repository contains an Authorization Server that emits JWT tokens following OAuth2 protocol.
 
-For more information about the whole system check the (page)[https://github.com/inkwell-store]
+For more information about the whole system check the [main page](https://github.com/inkwell-store).
 
 ## Endpoints
 The service exposes 2 public endpoints:
 
 * POST `/api/auth/create-account`: creates a new set of credentials 
-* POST `/api/auth/login`:
+* POST `/api/auth/login`: returns a jwt token
 
 Both of them require the following payload:
 
