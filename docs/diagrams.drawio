@@ -1,0 +1,84 @@
+<mxfile host="Electron">
+  <diagram name="entity diagram" id="ys5MomUF2ATlYwQmiDnb">
+    <mxGraphModel dx="712" dy="448" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-1" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Credential" vertex="1">
+          <mxGeometry height="104" width="185" x="108.5" y="92" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-2" parent="PLuYn5uNTePT4GF1cUFq-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- id: UUID" vertex="1">
+          <mxGeometry height="26" width="185" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-3" parent="PLuYn5uNTePT4GF1cUFq-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- email: String" vertex="1">
+          <mxGeometry height="26" width="185" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-4" parent="PLuYn5uNTePT4GF1cUFq-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- hashedPassword: String" vertex="1">
+          <mxGeometry height="26" width="185" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-5" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Role" vertex="1">
+          <mxGeometry height="78" width="140" x="467" y="302" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-6" parent="PLuYn5uNTePT4GF1cUFq-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- id: Integer" vertex="1">
+          <mxGeometry height="26" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-7" parent="PLuYn5uNTePT4GF1cUFq-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- name: RoleEnum" vertex="1">
+          <mxGeometry height="26" width="140" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-9" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="CredentialRole" vertex="1">
+          <mxGeometry height="52" width="140" x="131" y="315" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-24" parent="PLuYn5uNTePT4GF1cUFq-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="- id: Integer" vertex="1">
+          <mxGeometry height="26" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-13" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="RoleEnum" vertex="1">
+          <mxGeometry height="78" width="140" x="467" y="101" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-14" parent="PLuYn5uNTePT4GF1cUFq-13" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="ROLE_CUSTOMER" vertex="1">
+          <mxGeometry height="26" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-16" parent="PLuYn5uNTePT4GF1cUFq-13" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="ROLE_ADMIN" vertex="1">
+          <mxGeometry height="26" width="140" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-18" edge="1" parent="1" source="PLuYn5uNTePT4GF1cUFq-13" style="endArrow=none;html=1;rounded=0;" target="PLuYn5uNTePT4GF1cUFq-5" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="238" as="sourcePoint" />
+            <mxPoint x="560" y="238" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-22" edge="1" parent="1" source="PLuYn5uNTePT4GF1cUFq-1" style="endArrow=none;html=1;rounded=0;" target="PLuYn5uNTePT4GF1cUFq-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="398" y="203" as="sourcePoint" />
+            <mxPoint x="327" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-26" connectable="0" parent="PLuYn5uNTePT4GF1cUFq-22" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1 .. *" vertex="1">
+          <mxGeometry relative="1" x="0.8127" y="1" as="geometry">
+            <mxPoint x="13" y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-27" connectable="0" parent="PLuYn5uNTePT4GF1cUFq-22" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.8127" as="geometry">
+            <mxPoint x="14" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-23" edge="1" parent="1" source="PLuYn5uNTePT4GF1cUFq-5" style="endArrow=none;html=1;rounded=0;" target="PLuYn5uNTePT4GF1cUFq-9" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="198" y="232" as="sourcePoint" />
+            <mxPoint x="198" y="353" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-25" connectable="0" parent="PLuYn5uNTePT4GF1cUFq-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="0 .. *" vertex="1">
+          <mxGeometry relative="1" x="0.8776" y="-2" as="geometry">
+            <mxPoint x="10" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PLuYn5uNTePT4GF1cUFq-28" connectable="0" parent="PLuYn5uNTePT4GF1cUFq-23" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="1" vertex="1">
+          <mxGeometry relative="1" x="-0.7891" y="2" as="geometry">
+            <mxPoint x="2" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
