@@ -17,8 +17,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
+import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -37,6 +39,16 @@ public class JwtConfig {
 
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
+    }
+
+
+    @Bean
+    JWKSet jwkSet() {
+        RSAKey.Builder builder = new RSAKey.Builder(getPublicKey())
+        .keyUse(KeyUse.SIGNATURE)
+        .algorithm(JWSAlgorithm.RS256)
+        .keyID("inkwell-key1"); // TODO this is temporary until I implement a rotation key service
+        return new JWKSet(builder.build());
     }
 
     private RSAPublicKey getPublicKey() {

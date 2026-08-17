@@ -23,6 +23,7 @@ public class SecurityConfig {
             .requestMatchers(HttpMethod.POST, baseUrl + "create-account").permitAll()
             .requestMatchers(HttpMethod.POST, baseUrl + "login").permitAll()
             .requestMatchers(HttpMethod.GET, baseUrl + "public-hello").permitAll()
+            .requestMatchers(HttpMethod.GET, "/.well-known/jwks.json").permitAll()
             .anyRequest().authenticated()    
         )
 
