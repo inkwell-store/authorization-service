@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.wilson.inkwell.authorization.enums.RoleEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,6 +39,6 @@ public class Role {
     @Enumerated(EnumType.STRING)
     private RoleEnum name;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     private Set<CredentialRole> credentialRoles = new HashSet<>();
 }

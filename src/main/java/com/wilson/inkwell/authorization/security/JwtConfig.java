@@ -35,12 +35,14 @@ public class JwtConfig {
 
         JWK jwk = new RSAKey.Builder(getPublicKey())
                             .privateKey(getPrivateKey())
+                            .keyUse(KeyUse.SIGNATURE)
+                            .algorithm(JWSAlgorithm.RS256)
+                            .keyID("inkwell-key1") // TODO this is temporary until I implement a rotation key service
                             .build();
 
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
     }
-
 
     @Bean
     JWKSet jwkSet() {

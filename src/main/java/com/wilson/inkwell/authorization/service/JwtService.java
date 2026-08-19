@@ -41,7 +41,7 @@ public class JwtService {
         JwtClaimsSet claimSet = builder.build();
 
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256)
-                                    .keyId("inkwell-key-1")
+                                    .keyId("inkwell-key1")
                                     .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(header, claimSet)).getTokenValue();

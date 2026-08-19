@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
         int httpStatus = HttpStatus.CONFLICT.value();
         HttpBodyErrorResponse body = new HttpBodyErrorResponse(
-                httpStatus, "Email already registered", "Registration Error", Instant.now());
+                httpStatus, e.getMessage(), "Registration Error", Instant.now());
 
         return ResponseEntity.status(httpStatus).body(body);
 

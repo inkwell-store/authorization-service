@@ -11,6 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.wilson.inkwell.authorization.dto.CredentialCreationEvent;
 import com.wilson.inkwell.authorization.dto.CredentialForm;
 import com.wilson.inkwell.authorization.dto.JwtTokenResponse;
 import com.wilson.inkwell.authorization.entity.Credential;
@@ -32,17 +33,21 @@ public class CredentialService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final JwtService jwtService;
+    private final RabbitMqService rabbitMqService;
 
     public CredentialService(CredentialRepository credentialRepository, PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository, JwtService jwtService) {
+            RoleRepository roleRepository, JwtService jwtService, RabbitMqService rabbitMqService) {
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;
         this.jwtService = jwtService;
+        this.rabbitMqService = rabbitMqService;
     }
 
     @Transactional
     public void registerNewCredentials(CredentialForm form) {
+
+        Credential savedEntity; // used to generate a amq message
 
         Optional<Credential> credentialQuery = credentialRepository.getCredentialsByEmail(form.email());
 
@@ -68,10 +73,16 @@ public class CredentialService {
             newCredential.getCredentialRoles().add(credentialRole);
 
             try {
-                credentialRepository.save(newCredential);
+                savedEntity = credentialRepository.save(newCredential);
             } catch (DataIntegrityViolationException e) {
                 throw new CredentialAlreadyCreatedException(form.email());
             }
+
+            // send the message after a successful persistance operation
+            rabbitMqService.sendCredentialCreationMessage(
+                new CredentialCreationEvent(savedEntity.getEmail(), savedEntity.getId())
+            );
+
         }
     }
 
