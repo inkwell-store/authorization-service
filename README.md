@@ -1,4 +1,7 @@
 # Authorization Server
+This repository is part of the **Inkwell Book Store**, built as a distributed system project. For more information about the system check the [main page](https://github.com/inkwell-store).
+
+## About
 This repository contains a server that register new users (credentials) and emits JWT tokens.
 
 The current approach uses a custom Authentication system, with a custom JWTService, meaning I'm not using Spring's OAuth2. The reason I choose this approach here it's because it's simpler and requires less configuration. The near future I'll change this approach and, in fact, implement the pattern recommended by OAuth2.1. This update will change the API.
