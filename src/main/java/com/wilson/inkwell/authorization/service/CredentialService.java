@@ -33,10 +33,10 @@ public class CredentialService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final JwtService jwtService;
-    private final RabbitMqService rabbitMqService;
+    private final RabbitMqEventEmitterService rabbitMqService;
 
     public CredentialService(CredentialRepository credentialRepository, PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository, JwtService jwtService, RabbitMqService rabbitMqService) {
+            RoleRepository roleRepository, JwtService jwtService, RabbitMqEventEmitterService rabbitMqService) {
         this.credentialRepository = credentialRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleRepository = roleRepository;

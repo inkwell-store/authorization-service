@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import com.wilson.inkwell.authorization.dto.CredentialCreationEvent;
 
 @Service
-public class RabbitMqService {
+public class RabbitMqEventEmitterService {
 
     private final RabbitTemplate rabbitTemplate;
 
-    public RabbitMqService(RabbitTemplate rabbitTemplate) {
+    public RabbitMqEventEmitterService(RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
