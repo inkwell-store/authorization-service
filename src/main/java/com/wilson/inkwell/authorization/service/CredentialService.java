@@ -50,7 +50,7 @@ public class CredentialService {
     private int refreshTokenDurationDays;
 
     @Transactional
-    public void registerNewCredentials(CredentialForm form) {
+    public AccessAndRefreshTokenResponse registerNewCredentials(CredentialForm form) {
 
         Credential savedEntity; // used to generate a amq message
 
@@ -86,6 +86,12 @@ public class CredentialService {
             // send the message after a successful persistance operation
             rabbitMqService.sendCredentialCreationMessage(
                 new CredentialCreationEvent(savedEntity.getEmail(), savedEntity.getId())
+            );
+
+            // now I can generate both tokens
+            return new AccessAndRefreshTokenResponse(
+                generateJwtAccessTokenForCredential(savedEntity),
+                generateRefreshTokenForCredential(savedEntity)
             );
 
         }

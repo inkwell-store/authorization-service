@@ -34,9 +34,22 @@ public class AuthController {
     private int refreshTokenDurationDays;
 
     @PostMapping("create-account")
-    public ResponseEntity<Void> newCredentialRequest(@RequestBody CredentialForm form) {
-        credentialService.registerNewCredentials(form);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<JwtTokenResponse> newCredentialRequest(@RequestBody CredentialForm form) {
+        
+        AccessAndRefreshTokenResponse tokens = credentialService.registerNewCredentials(form);
+
+        ResponseCookie cookie = ResponseCookie.from("refresh_token", tokens.refreshToken())
+                                              .httpOnly(true)
+                                              // TODO change these values for production environments using https
+                                              .secure(false)
+                                              .sameSite("Lax")
+                                              .path("/api/auth")
+                                              .maxAge(Duration.ofDays(refreshTokenDurationDays))
+                                              .build();
+        
+        return ResponseEntity.ok()
+                             .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                             .body(new JwtTokenResponse(tokens.accessToken()));
     }
 
     @PostMapping("login")
