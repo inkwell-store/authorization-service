@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.wilson.inkwell.authorization.dto.AccessAndRefreshTokenResponse;
 import com.wilson.inkwell.authorization.dto.CredentialCreationEvent;
 import com.wilson.inkwell.authorization.dto.CredentialForm;
-import com.wilson.inkwell.authorization.dto.JwtTokenResponse;
 import com.wilson.inkwell.authorization.entity.Credential;
 import com.wilson.inkwell.authorization.entity.CredentialRole;
 import com.wilson.inkwell.authorization.entity.RefreshToken;
