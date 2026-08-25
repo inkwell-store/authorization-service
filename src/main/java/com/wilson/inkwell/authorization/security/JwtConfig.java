@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -30,6 +31,9 @@ import com.wilson.inkwell.authorization.exception.InternalServerErrorException;
 @Configuration
 public class JwtConfig {
 
+    @Value("${jwk.provisory.key}")
+    private String provisoryKeyId;
+
     @Bean
     JwtEncoder generateJwtEnconder() {
 
@@ -37,7 +41,7 @@ public class JwtConfig {
                             .privateKey(getPrivateKey())
                             .keyUse(KeyUse.SIGNATURE)
                             .algorithm(JWSAlgorithm.RS256)
-                            .keyID("inkwell-key1") // TODO this is temporary until I implement a rotation key service
+                            .keyID(provisoryKeyId) // TODO this is temporary until I implement a rotation key service
                             .build();
 
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
@@ -49,7 +53,7 @@ public class JwtConfig {
         RSAKey.Builder builder = new RSAKey.Builder(getPublicKey())
         .keyUse(KeyUse.SIGNATURE)
         .algorithm(JWSAlgorithm.RS256)
-        .keyID("inkwell-key1"); // TODO this is temporary until I implement a rotation key service
+        .keyID(provisoryKeyId); // TODO this is temporary until I implement a rotation key service
         return new JWKSet(builder.build());
     }
 

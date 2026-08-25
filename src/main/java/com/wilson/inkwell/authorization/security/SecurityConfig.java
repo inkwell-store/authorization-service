@@ -1,5 +1,6 @@
 package com.wilson.inkwell.authorization.security;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 import org.springframework.context.annotation.Bean;
@@ -48,5 +49,10 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
 
         return source;
+    }
+
+    @Bean
+    SecureRandom secureRandom() {
+        return new SecureRandom();
     }
 }

@@ -53,4 +53,7 @@ public class Credential {
     @OneToMany(mappedBy = "credential", cascade = CascadeType.ALL)
     private Set<CredentialRole> credentialRoles = new HashSet<>();
 
+    @OneToMany(mappedBy = "credential", cascade = CascadeType.ALL)
+    private Set<RefreshToken> refreshTokens = new HashSet<>();
+    
 }

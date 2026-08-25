@@ -1,13 +1,18 @@
 package com.wilson.inkwell.authorization.entity;
 
+import java.time.Instant;
+
 import com.wilson.inkwell.authorization.enums.RefreshTokenStatusEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -35,4 +40,15 @@ public class RefreshToken {
 
     @Enumerated(EnumType.STRING)
     private RefreshTokenStatusEnum status;
+
+    private Instant issuedAt;
+
+    private Instant expiresAt;
+
+    private Instant revokedAt; 
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "credential_id", nullable = false)
+    private Credential credential;
+    
 }

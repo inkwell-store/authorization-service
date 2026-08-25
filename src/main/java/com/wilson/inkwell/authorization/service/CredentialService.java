@@ -1,32 +1,40 @@
 package com.wilson.inkwell.authorization.service;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.wilson.inkwell.authorization.dto.AccessAndRefreshTokenResponse;
 import com.wilson.inkwell.authorization.dto.CredentialCreationEvent;
 import com.wilson.inkwell.authorization.dto.CredentialForm;
 import com.wilson.inkwell.authorization.dto.JwtTokenResponse;
 import com.wilson.inkwell.authorization.entity.Credential;
 import com.wilson.inkwell.authorization.entity.CredentialRole;
+import com.wilson.inkwell.authorization.entity.RefreshToken;
 import com.wilson.inkwell.authorization.entity.Role;
+import com.wilson.inkwell.authorization.enums.RefreshTokenStatusEnum;
 import com.wilson.inkwell.authorization.enums.RoleEnum;
 import com.wilson.inkwell.authorization.exception.AuthenticationException;
 import com.wilson.inkwell.authorization.exception.CredentialAlreadyCreatedException;
 import com.wilson.inkwell.authorization.exception.RoleNotFoundException;
 import com.wilson.inkwell.authorization.repository.CredentialRepository;
+import com.wilson.inkwell.authorization.repository.RefreshTokenRepository;
 import com.wilson.inkwell.authorization.repository.RoleRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CredentialService {
 
     private final CredentialRepository credentialRepository;
@@ -34,15 +42,11 @@ public class CredentialService {
     private final RoleRepository roleRepository;
     private final JwtService jwtService;
     private final RabbitMqEventEmitterService rabbitMqService;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
-    public CredentialService(CredentialRepository credentialRepository, PasswordEncoder passwordEncoder,
-            RoleRepository roleRepository, JwtService jwtService, RabbitMqEventEmitterService rabbitMqService) {
-        this.credentialRepository = credentialRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.roleRepository = roleRepository;
-        this.jwtService = jwtService;
-        this.rabbitMqService = rabbitMqService;
-    }
+    @Value("${refreshtoken.duration.days}")
+    private int refreshTokenDurationDays;
 
     @Transactional
     public void registerNewCredentials(CredentialForm form) {
@@ -86,26 +90,45 @@ public class CredentialService {
         }
     }
 
-    public JwtTokenResponse generateJwtTokenForUser(CredentialForm form) {
+    @Transactional
+    public AccessAndRefreshTokenResponse processLoginAttemp(CredentialForm form) {
 
         Optional<Credential> credentialQuery = credentialRepository.getCredentialsByEmail(form.email());
+        Credential credentialEntity;
 
         if (credentialQuery.isEmpty()) {
             throw new AuthenticationException("Credential for email: " + form.email() + " was not found.");
+        } else {
+            credentialEntity = credentialQuery.get();
         }
 
-        if (!passwordEncoder.matches(form.password(), credentialQuery.get().getPassword())) {
+        if (!passwordEncoder.matches(form.password(), credentialEntity.getPassword())) {
             throw new AuthenticationException("The password provided doesn't match the stored password.");
         }
 
+        // setting up the claims
         Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", credentialQuery.get().getId());
-
+        claims.put("sub", credentialEntity.getId());
         Set<String> roles = new HashSet<>();
-        credentialQuery.get().getCredentialRoles().forEach(e -> roles.add(e.getRole().getName().toString()));
+        credentialEntity.getCredentialRoles().forEach(e -> roles.add(e.getRole().getName().toString()));
         claims.put("roles", roles);
 
-        return new JwtTokenResponse(jwtService.generateJwt(claims));
+        // generate a refresh token 
+        String refreshToken = refreshTokenService.generateOpaqueRefreshToken();
+        RefreshToken tokenEntity = new RefreshToken();
+        tokenEntity.setStatus(RefreshTokenStatusEnum.VALID);
+        tokenEntity.setTokenHash(refreshTokenService.hashOpaqueToken(refreshToken));
+        tokenEntity.setIssuedAt(Instant.now());
+        tokenEntity.setExpiresAt(Instant.now().plus(refreshTokenDurationDays, ChronoUnit.DAYS));
+        tokenEntity.setCredential(credentialEntity);
+
+        // persist the refresh token
+        refreshTokenRepository.save(tokenEntity);
+
+        return new AccessAndRefreshTokenResponse(
+            jwtService.generateJwt(claims),
+            refreshToken
+        );
 
     }
 

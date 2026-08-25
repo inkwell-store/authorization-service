@@ -23,6 +23,12 @@ public class JwtService {
     @Value("${jwt.issuer}")
     private String issuer;
 
+    @Value("${accesstoken.duration.seconds}")
+    private int expirationTimeSeconds;
+
+    @Value("${jwk.provisory.key}")
+    private String provisoryKeyId;
+
     /**
      * Method that receives a map of claims and packs them together into a
      * jwt string.
@@ -30,18 +36,17 @@ public class JwtService {
     public String generateJwt(Map<String, Object> claims) {
 
         Instant issuedAt = Instant.now();
-        long EXPIRATION_TIME_SECONDS = 3600; 
 
         JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
                                                    .issuedAt(issuedAt)
-                                                   .expiresAt(issuedAt.plusSeconds(EXPIRATION_TIME_SECONDS))
+                                                   .expiresAt(issuedAt.plusSeconds(expirationTimeSeconds))
                                                    .issuer(issuer); 
 
         claims.forEach((key, value) -> builder.claim(key, value));
         JwtClaimsSet claimSet = builder.build();
 
         JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256)
-                                    .keyId("inkwell-key1")
+                                    .keyId(provisoryKeyId)
                                     .build();
 
         return jwtEncoder.encode(JwtEncoderParameters.from(header, claimSet)).getTokenValue();
