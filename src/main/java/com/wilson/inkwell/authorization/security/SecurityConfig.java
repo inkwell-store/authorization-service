@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers(HttpMethod.POST, baseUrl + "create-account").permitAll()
                 .requestMatchers(HttpMethod.POST, baseUrl + "login").permitAll()
+                .requestMatchers(HttpMethod.POST, baseUrl + "refresh").permitAll()
                 .requestMatchers(HttpMethod.GET, baseUrl + "public-hello").permitAll()
                 .requestMatchers(HttpMethod.GET, "/.well-known/jwks.json").permitAll()
                 .anyRequest().authenticated())

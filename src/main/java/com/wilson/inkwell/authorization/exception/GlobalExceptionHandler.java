@@ -50,4 +50,13 @@ public class GlobalExceptionHandler {
 
     }
 
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<HttpBodyErrorResponse> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+        int httpStatus = HttpStatus.UNAUTHORIZED.value();
+        HttpBodyErrorResponse body = new HttpBodyErrorResponse(
+                httpStatus, "Refresh token is invalid", "Authentication Error", Instant.now());
+
+        return ResponseEntity.status(httpStatus).body(body);
+    }
+
 }

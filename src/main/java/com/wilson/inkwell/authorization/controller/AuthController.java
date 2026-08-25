@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -33,13 +34,13 @@ public class AuthController {
     private int refreshTokenDurationDays;
 
     @PostMapping("create-account")
-    public ResponseEntity<Void> processNewCredentialRequest(@RequestBody CredentialForm form) {
+    public ResponseEntity<Void> newCredentialRequest(@RequestBody CredentialForm form) {
         credentialService.registerNewCredentials(form);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PostMapping("login")
-    public ResponseEntity<JwtTokenResponse> processLoginRequest(@RequestBody CredentialForm form) {
+    public ResponseEntity<JwtTokenResponse> loginRequest(@RequestBody CredentialForm form) {
         AccessAndRefreshTokenResponse tokens = credentialService.processLoginAttemp(form);
 
         ResponseCookie cookie = ResponseCookie.from("refresh_token", tokens.refreshToken())
@@ -59,6 +60,12 @@ public class AuthController {
     @GetMapping("public-hello")
     public String getMethodName() {
         return "Hello from public endpoint";
+    }
+    
+    @PostMapping("refresh")
+    public ResponseEntity<JwtTokenResponse> refreshAccessToken(@CookieValue("refresh_token") String refreshToken) {
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(
+                credentialService.processRefreshAccessToken(refreshToken));
     }
     
 }

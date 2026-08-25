@@ -57,16 +57,5 @@ public class RefreshTokenService {
         }
     }
 
-    /**
-     * Hashes the <code>rawToken</code> and compares it with the 
-     * <code>hashToken</code> to establish if they are equal or not. 
-     * 
-     * @param hashToken the hashed opaque token
-     * @param rawToken the raw opaque token
-     * @return true if they are equal
-     */
-    public boolean doRefreshTokensMatch(String hashToken, String rawToken) {
-        return hashOpaqueToken(rawToken).equals(hashToken);
-    }
 
 }
