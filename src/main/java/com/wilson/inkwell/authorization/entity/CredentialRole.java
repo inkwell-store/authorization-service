@@ -1,5 +1,6 @@
 package com.wilson.inkwell.authorization.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,6 +14,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * CredentialRole is an Entity that represents the many-to-many relationship
+ * between {@link Role} and {@link Credential} entities.
+ */
 @Entity
 @Table(name = "CREDENTIAL_ROLE_TBL")
 @Setter
@@ -28,11 +33,11 @@ public class CredentialRole {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "credential_id")
+    @JoinColumn(name = "credential_id", nullable = false)
     private Credential credential;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
 }

@@ -7,6 +7,7 @@ import com.wilson.inkwell.authorization.dto.CredentialForm;
 import com.wilson.inkwell.authorization.dto.JwtTokenResponse;
 import com.wilson.inkwell.authorization.service.CredentialService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.time.Duration;
@@ -34,7 +35,7 @@ public class AuthController {
     private int refreshTokenDurationDays;
 
     @PostMapping("create-account")
-    public ResponseEntity<JwtTokenResponse> newCredentialRequest(@RequestBody CredentialForm form) {
+    public ResponseEntity<JwtTokenResponse> newCredentialRequest(@Valid @RequestBody CredentialForm form) {
 
         AccessAndRefreshTokenResponse tokens = credentialService.registerNewCredentials(form);
         
@@ -44,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("login")
-    public ResponseEntity<JwtTokenResponse> loginRequest(@RequestBody CredentialForm form) {
+    public ResponseEntity<JwtTokenResponse> loginRequest(@Valid @RequestBody CredentialForm form) {
         AccessAndRefreshTokenResponse tokens = credentialService.processLoginAttemp(form);
 
         return ResponseEntity.ok()
@@ -59,6 +60,7 @@ public class AuthController {
     
     @PostMapping("refresh")
     public ResponseEntity<JwtTokenResponse> refreshAccessToken(@CookieValue("refresh_token") String refreshToken) {
+        System.out.println("the token is: " + refreshToken);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(
                 credentialService.processRefreshAccessToken(refreshToken));
     }

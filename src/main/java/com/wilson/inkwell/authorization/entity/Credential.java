@@ -39,11 +39,13 @@ public class Credential {
     @EqualsAndHashCode.Include
     private UUID id;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "password", nullable = false)
     private String password;
 
+    @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
     // It's useful to initialize the Set here because if Hibernate queries the

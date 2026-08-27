@@ -1,35 +1,41 @@
 package com.wilson.inkwell.authorization.exception;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.wilson.inkwell.authorization.dto.HttpBodyErrorResponse;
+import com.wilson.inkwell.authorization.dto.HttpErrorResponseBody;
+import com.wilson.inkwell.authorization.dto.HttpMultipleErrorResponseBody;
+import com.wilson.inkwell.authorization.enums.HttpErrorTypeEnum;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<HttpBodyErrorResponse> handleAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<HttpErrorResponseBody> handleAuthenticationException(AuthenticationException e) {
 
         int httpStatus = HttpStatus.UNAUTHORIZED.value();
-        HttpBodyErrorResponse body = new HttpBodyErrorResponse(
-                httpStatus, "Invalid email or password", "Authentication Error", Instant.now());
+        HttpErrorResponseBody body = new HttpErrorResponseBody(
+                httpStatus, "Invalid email or password", HttpErrorTypeEnum.AUTHENTICATION_ERROR, Instant.now());
 
         return ResponseEntity.status(httpStatus).body(body);
 
     }
 
     @ExceptionHandler(CredentialAlreadyCreatedException.class)
-    public ResponseEntity<HttpBodyErrorResponse> handleCredentialAlreadyCreatedException(
+    public ResponseEntity<HttpErrorResponseBody> handleCredentialAlreadyCreatedException(
             CredentialAlreadyCreatedException e) {
 
         int httpStatus = HttpStatus.CONFLICT.value();
-        HttpBodyErrorResponse body = new HttpBodyErrorResponse(
-                httpStatus, e.getMessage(), "Registration Error", Instant.now());
+        HttpErrorResponseBody body = new HttpErrorResponseBody(
+                httpStatus, e.getMessage(), HttpErrorTypeEnum.REGISTRATION_ERROR, Instant.now());
 
         return ResponseEntity.status(httpStatus).body(body);
 
@@ -40,23 +46,37 @@ public class GlobalExceptionHandler {
     // for uncaught exceptions is 409 if I remember correctly. I should consider
     // looking into overriding it to a 500 INTERNAL_SERVER_ERROR maybe?
     @ExceptionHandler(InternalServerErrorException.class)
-    public ResponseEntity<HttpBodyErrorResponse> handleInternalServerErrorException(InternalServerErrorException e) {
+    public ResponseEntity<HttpErrorResponseBody> handleInternalServerErrorException(InternalServerErrorException e) {
 
         int httpStatus = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        HttpBodyErrorResponse body = new HttpBodyErrorResponse(
-                httpStatus, "An internal error happened.", "Server Error", Instant.now());
+        HttpErrorResponseBody body = new HttpErrorResponseBody(
+                httpStatus, "An internal error happened.", HttpErrorTypeEnum.INTERNAL_SERVER_ERROR, Instant.now());
 
         return ResponseEntity.status(httpStatus).body(body);
 
     }
 
     @ExceptionHandler(InvalidRefreshTokenException.class)
-    public ResponseEntity<HttpBodyErrorResponse> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
+    public ResponseEntity<HttpErrorResponseBody> handleInvalidRefreshTokenException(InvalidRefreshTokenException e) {
         int httpStatus = HttpStatus.UNAUTHORIZED.value();
-        HttpBodyErrorResponse body = new HttpBodyErrorResponse(
-                httpStatus, "Refresh token is invalid", "Authentication Error", Instant.now());
+        HttpErrorResponseBody body = new HttpErrorResponseBody(
+                httpStatus, "Refresh token is invalid", HttpErrorTypeEnum.AUTHENTICATION_ERROR, Instant.now());
 
         return ResponseEntity.status(httpStatus).body(body);
     }
 
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<HttpMultipleErrorResponseBody> handleBeanValidationException(MethodArgumentNotValidException e) {
+
+        Map<String, String> messages = new HashMap<>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            messages.putIfAbsent(error.getField(), error.getDefaultMessage());
+        }
+
+        int httpStatus = HttpStatus.BAD_REQUEST.value();
+        HttpMultipleErrorResponseBody body  = new HttpMultipleErrorResponseBody(
+            httpStatus, Instant.now(), HttpErrorTypeEnum.VALIDATION_ERROR, messages);
+
+        return ResponseEntity.status(httpStatus).body(body);
+    }
 }

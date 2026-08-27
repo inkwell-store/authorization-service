@@ -203,7 +203,6 @@ public class CredentialService {
      */
     private String generateRefreshTokenForCredential(Credential credential) {
         
-        // generate a refresh token 
         String refreshToken = refreshTokenService.generateOpaqueRefreshToken();
         
         RefreshToken tokenEntity = new RefreshToken();

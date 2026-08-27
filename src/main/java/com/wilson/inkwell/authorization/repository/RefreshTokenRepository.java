@@ -10,7 +10,7 @@ import com.wilson.inkwell.authorization.entity.RefreshToken;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
     
-    @Query("SELECT rt FROM RefreshToken rt WHERE rt.tokenHash =: tokenHash")
+    @Query("SELECT rt FROM RefreshToken rt WHERE rt.tokenHash = :tokenHash")
     Optional<RefreshToken> getRefreshTokenEntityByHash(@Param("tokenHash") String tokenHash); 
 
 }

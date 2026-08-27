@@ -6,6 +6,7 @@ import java.util.Set;
 import com.wilson.inkwell.authorization.enums.RoleEnum;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,6 +38,7 @@ public class Role {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "name", nullable = false, unique = true)
     private RoleEnum name;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
