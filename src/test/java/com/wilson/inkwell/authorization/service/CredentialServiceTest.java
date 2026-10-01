@@ -59,6 +59,8 @@ public class CredentialServiceTest {
     void shouldRegisterNewCredential() {
 
         // 1: Arrange
+        String refreshToken = "refresh-token";
+        String accessToken = "access-token";
         CredentialForm form = new CredentialForm("test@gmail.com", "test-password");
         Role role = new Role();
         role.setName(RoleEnum.ROLE_CUSTOMER);
@@ -66,15 +68,15 @@ public class CredentialServiceTest {
         when(credentialRepository.getCredentialsByEmail(form.email())).thenReturn(Optional.empty());
         when(roleRepository.getRoleByName(RoleEnum.ROLE_CUSTOMER)).thenReturn(Optional.of(role));
         when(passwordEncoder.encode(form.password())).thenReturn("hashed-enconded-password");
-        when(jwtService.generateJwt(any())).thenReturn("access-token");
+        when(jwtService.generateJwt(any())).thenReturn(accessToken);
 
         // retunr the entity I passed to the save()
         when(credentialRepository.save(any(Credential.class))).thenAnswer(
             invoc -> invoc.getArgument(0)
         );
 
-        when(refreshTokenService.generateOpaqueRefreshToken()).thenReturn("refresh-token");
-        when(refreshTokenService.hashOpaqueToken("refresh-token")).thenReturn("hashed-refresh-token");
+        when(refreshTokenService.generateOpaqueRefreshToken()).thenReturn(refreshToken);
+        when(refreshTokenService.hashOpaqueToken(refreshToken)).thenReturn("hashed-refresh-token");
 
         // 2: Act
         AccessAndRefreshTokenResponse response =  credentialService.registerNewCredentials(form);
@@ -82,8 +84,8 @@ public class CredentialServiceTest {
         // 3: Assert
         // first the response must not be null
         assertNotNull(response);
-        assertEquals("refresh-token", response.refreshToken());
-        assertEquals("access-token", response.accessToken());
+        assertEquals(refreshToken, response.refreshToken());
+        assertEquals(accessToken, response.accessToken());
 
         // see if the save() method was correctly called with a Credential
         verify(credentialRepository).save(any(Credential.class));
