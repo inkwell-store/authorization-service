@@ -75,4 +75,25 @@ public class AuthController {
                              .maxAge(Duration.ofDays(refreshTokenDurationDays))
                              .build();
     }
+
+    @PostMapping("logout")
+    public ResponseEntity<Void> requestLogout(@CookieValue("refresh_token") String refreshToken) {
+
+        
+        // return an empty cookie, while the browser overrides it
+        ResponseCookie emptyCookie = 
+             ResponseCookie.from("refresh_token", "") 
+                           .httpOnly(true)
+                           // TODO change these values for production environments using https
+                           .secure(false)
+                           .sameSite("Lax")
+                           .path("/api/auth")
+                           .maxAge(Duration.ZERO)
+                           .build();
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                             .header(HttpHeaders.SET_COOKIE, emptyCookie.toString())
+                             .build();
+
+    }
 }

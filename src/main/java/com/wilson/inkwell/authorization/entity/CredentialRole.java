@@ -30,7 +30,7 @@ public class CredentialRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
-    private Integer id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "credential_id", nullable = false)

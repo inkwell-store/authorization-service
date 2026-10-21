@@ -15,17 +15,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMqConfig {
 
-    // Declaring Exchange names
-    private final String CREDENTIAL_EXCHANGE = "credential.events";
-
     @Bean
     CachingConnectionFactory cachingConnectionFactory() {
-        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost");
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("rabbitmq-service");
 
-        connectionFactory.setUsername("guest");
-        connectionFactory.setPassword("guest");
+        connectionFactory.setUsername("authorization-service");
+        connectionFactory.setPassword("authorization-service");
         connectionFactory.setCacheMode(CachingConnectionFactory.CacheMode.CHANNEL);
-        connectionFactory.setChannelCacheSize(25);
+        connectionFactory.setPort(5672);
+        connectionFactory.setVirtualHost("development_vhost");
 
         return connectionFactory;
     }
@@ -41,29 +39,5 @@ public class RabbitMqConfig {
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
-
-    @Bean
-    FanoutExchange credentialFanoutExchange() {
-        return new FanoutExchange(CREDENTIAL_EXCHANGE);
-    }
-
-    @Bean
-    Queue customerQueue() {
-        return new Queue("customer.credential-queue");
-    }
-
-    @Bean
-    Queue notificationQueue() {
-        return new Queue("notification.credential-queue");
-    }
-
-    @Bean
-    Binding customerBinding() {
-        return BindingBuilder.bind(customerQueue()).to(credentialFanoutExchange());
-    }
-
-    @Bean
-    Binding notificationBinding() {
-        return BindingBuilder.bind(notificationQueue()).to(credentialFanoutExchange());
-    }
+    
 }

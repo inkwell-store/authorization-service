@@ -175,6 +175,21 @@ public class CredentialService {
 
     }
 
+
+    @Transactional 
+    public void processLogoutRequest(String refreshToken) {
+        // grab the entity using the refresh token
+        RefreshToken entity = refreshTokenRepository.getRefreshTokenEntityByHash(
+            refreshTokenService.hashOpaqueToken(refreshToken))
+            .orElseThrow(() -> new InvalidRefreshTokenException("No RefreshToken entity was found"));
+        
+        // set said token to revoked
+        entity.setRevokedAt(Instant.now());
+        entity.setStatus(RefreshTokenStatusEnum.REVOKED);
+
+        refreshTokenRepository.save(entity);
+    }
+
     /**
      * Generates a new Jwt-encoded AccessToken for the Credential passed as parameter
      * and returns it as a base64 string 
