@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
 import com.nimbusds.jose.JWSAlgorithm;
@@ -48,6 +50,10 @@ public class JwtConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
+    @Bean
+    JwtDecoder generateJwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(getPublicKey()).build();
+    }
     @Bean
     JWKSet jwkSet() {
         RSAKey.Builder builder = new RSAKey.Builder(getPublicKey())

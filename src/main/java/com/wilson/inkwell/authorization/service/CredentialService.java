@@ -7,9 +7,11 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,7 @@ import com.wilson.inkwell.authorization.enums.RefreshTokenStatusEnum;
 import com.wilson.inkwell.authorization.enums.RoleEnum;
 import com.wilson.inkwell.authorization.exception.AuthenticationException;
 import com.wilson.inkwell.authorization.exception.CredentialAlreadyCreatedException;
+import com.wilson.inkwell.authorization.exception.EntityNotFoundException;
 import com.wilson.inkwell.authorization.exception.InvalidRefreshTokenException;
 import com.wilson.inkwell.authorization.exception.RoleNotFoundException;
 import com.wilson.inkwell.authorization.repository.CredentialRepository;
@@ -188,6 +191,18 @@ public class CredentialService {
         entity.setStatus(RefreshTokenStatusEnum.REVOKED);
 
         refreshTokenRepository.save(entity);
+    }
+
+    public String getEmail() {
+
+        // TODO setup a resource server to fetch the id using the SecurityContextHolder
+        UUID uuid = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        Credential credential = credentialRepository.findById(uuid).orElseThrow(() -> 
+            new EntityNotFoundException("No credential found for uuid: " + uuid)
+        );
+
+        return credential.getEmail();
     }
 
     /**

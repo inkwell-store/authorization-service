@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wilson.inkwell.authorization.dto.AccessAndRefreshTokenResponse;
 import com.wilson.inkwell.authorization.dto.CredentialForm;
+import com.wilson.inkwell.authorization.dto.EmailResponse;
 import com.wilson.inkwell.authorization.dto.JwtTokenResponse;
 import com.wilson.inkwell.authorization.service.CredentialService;
 
@@ -57,10 +58,14 @@ public class AuthController {
     public String getMethodName() {
         return "Hello from public endpoint";
     }
+
+    @GetMapping("me/email")
+    public ResponseEntity<EmailResponse> getEmail() {
+        return ResponseEntity.status(HttpStatus.OK).body(new EmailResponse(credentialService.getEmail()));
+    }
     
     @PostMapping("refresh")
     public ResponseEntity<JwtTokenResponse> refreshAccessToken(@CookieValue("refresh_token") String refreshToken) {
-        System.out.println("the token is: " + refreshToken);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(
                 credentialService.processRefreshAccessToken(refreshToken));
     }
