@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.wilson.inkwell.authorization.enums.RoleEnum;
@@ -18,7 +19,7 @@ import com.wilson.inkwell.authorization.enums.RoleEnum;
 public class SecurityConfig {
 
     @Bean
-    SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    SecurityFilterChain filterChain(HttpSecurity httpSecurity, AuthenticationEntryPoint authenticationEntryPoint) throws Exception {
 
         String BASE_URL = "/api/auth/";
 
@@ -38,6 +39,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .oauth2ResourceServer(oauth -> oauth
                     .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())) // registering the converter
+                    .authenticationEntryPoint(authenticationEntryPoint) // injects my custom implementation
                 );
 
         return httpSecurity.build();

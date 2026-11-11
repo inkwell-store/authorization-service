@@ -31,5 +31,7 @@ public enum HttpErrorTypeEnum {
      * The refresh token sent in the request is invalid, like malformed, expired
      * or missing.
      */
-    INVALID_REFRESH_TOKEN
+    INVALID_REFRESH_TOKEN,
+
+    ACCESS_TOKEN_INVALID
 }
